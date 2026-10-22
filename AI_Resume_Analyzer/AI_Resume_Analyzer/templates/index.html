@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Resume Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">CAREER TOOLKIT</p>
+      <h1>Resume Analyzer</h1>
+      <p class="subtitle">Compare your resume with a job description and identify keywords to review.</p>
+    </header>
+
+    <section class="panel">
+      <form method="post" enctype="multipart/form-data">
+        <label for="resume">Resume file (.txt)</label>
+        <input id="resume" name="resume" type="file" accept=".txt" required>
+
+        <label for="job_description">Job description</label>
+        <textarea id="job_description" name="job_description" rows="9"
+          placeholder="Paste the full job description here..." required></textarea>
+
+        <button type="submit">Analyze Resume</button>
+      </form>
+      {% if error %}
+        <p class="error" role="alert">{{ error }}</p>
+      {% endif %}
+    </section>
+
+    {% if result %}
+    <section class="results panel" aria-live="polite">
+      <h2>Analysis results</h2>
+      <div class="score-row">
+        <div class="score">{{ result.score }}<span>/100</span></div>
+        <p>This is a keyword-overlap indicator, not a guaranteed ATS score or hiring prediction.</p>
+      </div>
+
+      <h3>Matched keywords ({{ result.matched|length }})</h3>
+      {% if result.matched %}
+        <div class="chips">
+          {% for keyword in result.matched %}<span class="chip good">{{ keyword }}</span>{% endfor %}
+        </div>
+      {% else %}<p>No matching keywords found in this basic comparison.</p>{% endif %}
+
+      <h3>Keywords to review ({{ result.missing|length }})</h3>
+      {% if result.missing %}
+        <div class="chips">
+          {% for keyword in result.missing %}<span class="chip missing">{{ keyword }}</span>{% endfor %}
+        </div>
+      {% else %}<p>All extracted keywords were found.</p>{% endif %}
+
+      <h3>Suggestions</h3>
+      <ul>{% for suggestion in result.suggestions %}<li>{{ suggestion }}</li>{% endfor %}</ul>
+    </section>
+    {% endif %}
+
+    <footer>Privacy note: the app processes the uploaded text locally in this Flask application. Do not upload sensitive personal information to a public deployment.</footer>
+  </main>
+</body>
+</html>
