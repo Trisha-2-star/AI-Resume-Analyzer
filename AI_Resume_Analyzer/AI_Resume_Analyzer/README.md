@@ -93,6 +93,4 @@ The app has a 2 MB upload limit and does not save uploaded resume text to a data
 - Add optional LLM-generated feedback with clear consent and secure API-key handling
 - Add tests and a production deployment configuration
 
-## License
 
-You may use and modify this project for learning. Add a license file if you intend to distribute it under specific terms.
